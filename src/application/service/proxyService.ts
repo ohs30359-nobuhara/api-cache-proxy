@@ -3,8 +3,8 @@ import {Resource} from "../type/resource";
 import {RequestHandler} from "fastify";
 import {ResponseVo} from "@domain/vo/responseVo";
 import {RequestVo} from "@domain/vo/requestVo";
-import {backPostService} from "@application/service/BackPostService";
-import {cacheService} from "@application/service/CacheService";
+import {backPostService} from "@application/service/backPostService";
+import {cacheService} from "@application/service/cacheService";
 
 /**
  * ProxyService
