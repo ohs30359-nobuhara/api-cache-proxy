@@ -1,3 +1,7 @@
 resources:
-  - prefix: xxxxx
-    upstream: xxxx
+  - prefix: zip
+    upstream: api.zipaddress.net/
+    expire: 20
+    circuitBreaker:
+        activeSpanMs: 30
+        threshold: 5

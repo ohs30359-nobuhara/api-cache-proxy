@@ -1,6 +1,6 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
-import {Response} from "@application/type/response";
-import {Request} from "@application/type/request";
+import {RequestVo} from "@domain/vo/requestVo";
+import {ResponseVo} from "@domain/vo/responseVo";
 
 /**
  * HttpDriver
@@ -11,19 +11,28 @@ export class HttpDriver {
    * get
    * @param request
    */
-  public async get(request: Request): Promise<Response> {
-    const response: AxiosResponse = await axios(this.convertFromRequest(request));
-    return this.convertFromResponse(response);
+  public async get(request: RequestVo): Promise<ResponseVo> {
+    try {
+      const response: AxiosResponse = await axios(this.convertFromRequest(request));
+      return this.convertFromResponse(response);
+
+    } catch (e) {
+      throw e;
+    }
   }
 
   /**
    * convertFromRequest
-   * @param {Request} request
+   * @param {RequestVo} request
    */
-  private convertFromRequest(request: Request): AxiosRequestConfig {
+  private convertFromRequest(request: RequestVo): AxiosRequestConfig {
     const c: AxiosRequestConfig = {
       url: request.url
     };
+
+    if (request.query != null) {
+      c.params = request.query
+    }
 
     if (request.timeout !== undefined) {
       c.timeout = request.timeout;
@@ -37,14 +46,10 @@ export class HttpDriver {
   }
 
   /**
-   * convertFromResponse(
+   * convertFromResponse
    * @param response
    */
-  private convertFromResponse(response: AxiosResponse): Response {
-    return {
-      data: response.data,
-      header: response.headers
-    }
+  private convertFromResponse(response: AxiosResponse): ResponseVo {
+    return ResponseVo.createFromAxsios(response);
   }
-
 }

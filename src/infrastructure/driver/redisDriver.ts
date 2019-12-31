@@ -1,7 +1,7 @@
 import * as IORedis from 'ioredis';
 
 /**
- * RedisDriver
+ * RedisRepository
  * @class
  */
 export class RedisDriver {

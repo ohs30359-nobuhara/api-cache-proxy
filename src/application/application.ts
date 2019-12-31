@@ -1,8 +1,8 @@
 import { get } from 'config';
 import * as fastify from 'fastify'
 import { Server, IncomingMessage, ServerResponse } from 'http'
-import {Resources} from "@application/type/resources";
-import {Service} from "@application/service";
+import {Resource} from "@application/type/resource";
+import {Proxy} from "@application/proxy";
 
 /**
  * Application
@@ -10,7 +10,7 @@ import {Service} from "@application/service";
  */
 export class Application {
   private readonly server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse>;
-  private readonly resources: Resources[];
+  private readonly resources: Resource[];
 
   /**
    * @constructor
@@ -24,7 +24,7 @@ export class Application {
    * run
    */
   public run() {
-    const svc: Service = new Service(this.server, this.resources);
+    const svc: Proxy = new Proxy(this.server, this.resources);
     svc.activate();
 
     this.server.listen(3000, () => {
