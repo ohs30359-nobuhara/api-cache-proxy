@@ -1,4 +1,6 @@
 import {RedisDriver} from "@infrastructure/driver/redisDriver";
+import {get} from "config";
+import {ClusterRedis, SingleRedis} from "@application/type/redis";
 
 /**
  * RedisRepository
@@ -11,7 +13,7 @@ export class RedisRepository {
    * @constructor
    */
   public constructor() {
-    this.driver = RedisDriver.singleMode({port: 3000, host: 'localhost:6379'})
+    this.driver = this.loadSingleRedis();
   }
 
   /**
@@ -30,6 +32,36 @@ export class RedisRepository {
    */
   public async set(key: string, value: any, expire: number = 30) {
     this.driver.set(key, value, expire);
+  }
+
+  /**
+   * loadSingleRedis
+   */
+  protected loadSingleRedis(): RedisDriver {
+    const redisConfig: SingleRedis = get('redis.single');
+    const conf: string[] = redisConfig.node.split(':');
+
+    const host: string = conf[0];
+    const port: number = +conf[1];
+
+    return RedisDriver.singleMode({port, host})
+  }
+
+  /**
+   * loadClusterRedis
+   */
+  protected loadClusterRedis(): RedisDriver {
+    const redisConfig: ClusterRedis = get('redis.multi');
+
+    const clusters: Array<{host: string, port: number}> = redisConfig.nodes.map(node => {
+      const conf: string[] = node.split(':');
+      return {
+        host: conf[0],
+        port: +conf[1]
+      }
+    });
+
+    return RedisDriver.clusterMode({clusters})
   }
 }
 

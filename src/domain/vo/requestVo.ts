@@ -1,9 +1,9 @@
+import {Resource} from "@application/type/resource";
+import {stringify} from "query-string";
 /**
  * RequestVo
  * @class
  */
-import {Resource} from "@application/type/resource";
-
 export class RequestVo {
   public readonly url: string;
   public readonly headers?: any;
@@ -22,6 +22,13 @@ export class RequestVo {
     this.headers = headers;
     this.timeout = timeout;
     this.query = query;
+  }
+
+  /**
+   * getFullUrl
+   */
+  public getFullUrl(): string {
+    return `${this.url}?${stringify(this.query)}`;
   }
 
   /**

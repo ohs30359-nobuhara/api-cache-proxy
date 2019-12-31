@@ -1,5 +1,7 @@
 import {get} from "config";
 import {redisRepository} from "@infrastructure/redisRepository";
+import {RequestVo} from "@domain/vo/requestVo";
+import {ResponseVo} from "@domain/vo/responseVo";
 
 /**
  * CacheService
@@ -21,15 +23,29 @@ export class CacheService {
     });
   }
 
-  public async read(host: string, queryParam: any): Promise<string> {
-    return await redisRepository.read(host) || '';
+  /**
+   * read
+   * @param vo
+   */
+  public async read(vo: RequestVo): Promise<ResponseVo|null> {
+    const cache: string | null = await redisRepository.read(vo.getFullUrl());
+
+    if (cache == null) {
+      return null;
+    }
+
+    return JSON.parse(cache);
   }
 
-  public async write(host: string, qp: any, value: any): Promise<void> {
-    //TODO: queryParamでcacheするように変更
-    const c: CacheConfig | undefined = this.config.get(host);
+  /**
+   * write
+   * @param requestVo
+   * @param responseVo
+   */
+  public async write(requestVo: RequestVo, responseVo: ResponseVo): Promise<void> {
+    const c: CacheConfig | undefined = this.config.get(requestVo.url);
     const expire: number = c? c.expire : 60;
-    redisRepository.set(host, value, expire);
+    redisRepository.set(requestVo.getFullUrl(), JSON.stringify(responseVo), expire);
   }
 }
 
@@ -40,3 +56,5 @@ export class CacheService {
 interface CacheConfig {
   expire: number
 }
+
+export const cacheService: CacheService = new CacheService();

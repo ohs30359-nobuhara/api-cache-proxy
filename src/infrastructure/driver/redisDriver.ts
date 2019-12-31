@@ -93,7 +93,7 @@ interface SingleConnectionConfig {
  */
 interface ClusterConnectionConfig {
   clusters: Array<{port: number, host: string}>
-  password: string
+  password?: string
 }
 
 enum ConnectionStatus {
