@@ -11,8 +11,9 @@ redis:
 
 resources:
 - prefix: sample
-  upstream: target host
+  upstream: proxy host
   expire: 20
+  timeoutMs: 3000
   circuitBreaker:
     activeSpanMs: 30
     threshold: 5

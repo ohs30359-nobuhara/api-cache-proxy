@@ -55,6 +55,6 @@ export class RequestVo {
     const headers: any = req.headers;
     headers.host = "";
 
-    return new RequestVo(`${resource.upstream}`, req.query, headers, 3000);
+    return new RequestVo(`${resource.upstream}`, req.query, headers, resource.timeoutMs);
   }
 }
