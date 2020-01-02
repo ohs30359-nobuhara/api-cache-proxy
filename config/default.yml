@@ -1,7 +1,34 @@
+redis:
+  single:
+    node: localhost:6379
+    password: passwd
+  cluster:
+    nodes:
+      - localhost:6379
+      - localhost:6379
+      - localhost:6379
+    password: passwd
+
 resources:
-  - prefix: zip
-    upstream: api.zipaddress.net/
-    expire: 20
-    circuitBreaker:
-        activeSpanMs: 30
-        threshold: 5
+- prefix: sample
+  upstream: target host
+  expire: 20
+  circuitBreaker:
+    activeSpanMs: 30
+    threshold: 5
+
+log:
+  appenders:
+    stdout:
+      type: stdout
+    stderr:
+      type: stderr
+  categories:
+    default:
+      appenders:
+      - stdout
+      level: debug
+    error:
+      appenders:
+      - stderr
+      level: ERROR

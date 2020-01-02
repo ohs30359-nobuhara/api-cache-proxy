@@ -3,6 +3,7 @@ import * as fastify from 'fastify'
 import { Server, IncomingMessage, ServerResponse } from 'http'
 import {Resource} from "@application/type/resource";
 import {ProxyService} from "@application/service/proxyService";
+import {logger} from "@application/logger";
 
 /**
  * Application
@@ -28,7 +29,7 @@ export class Application {
     svc.activate();
 
     this.server.listen(3000, () => {
-      console.log('server start');
+      logger.info({message: 'server running'});
     });
   }
 }

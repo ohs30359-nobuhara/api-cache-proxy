@@ -28,7 +28,13 @@ export class RequestVo {
    * getFullUrl
    */
   public getFullUrl(): string {
-    return `${this.url}?${stringify(this.query)}`;
+    const qs: string = stringify(this.query);
+
+    if (qs.length === 0) {
+      return this.url;
+    }
+
+    return `${this.url}?${qs}`;
   }
 
   /**

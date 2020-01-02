@@ -7,6 +7,7 @@ import {AxiosResponse} from "axios";
  */
 export class ResponseVo {
   public readonly data: any
+  public readonly status: number;
   public readonly header: Map<string, any>
 
   /**
@@ -14,9 +15,10 @@ export class ResponseVo {
    * @param data
    * @param header
    */
-  public constructor(data: any, header: any) {
+  public constructor(data: any, status: number, header: any) {
     this.data = data;
     this.header = header;
+    this.status = status;
   }
 
   /**
@@ -24,6 +26,6 @@ export class ResponseVo {
    * @param response
    */
   public static createFromAxsios(response: AxiosResponse): ResponseVo {
-    return new ResponseVo(response.data, response.headers);
+    return new ResponseVo(response.data, response.status, response.headers);
   }
 }
