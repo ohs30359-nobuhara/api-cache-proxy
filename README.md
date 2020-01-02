@@ -1,7 +1,9 @@
 # api-cache-proxy
 
 Ensuring system performance and SLAs is very important for developers.
+
 Common means of realization are cache, Circuit Breaker, etc.
+
 But implementing them for all APIs is difficult.
 
 This application provides cache and circuit breaker as proxy service for existing API.
