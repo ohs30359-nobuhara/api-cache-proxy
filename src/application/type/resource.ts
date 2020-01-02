@@ -5,10 +5,10 @@
 export type Resource = {
   prefix: string
   upstream: string
-  expire: number
+  expireSec: number
   timeoutMs: number
   circuitBreaker: {
-    activeSpanMs: number
+    activeSpanSec: number
     threshold: number
   }
 }

@@ -28,4 +28,12 @@ export class ResponseVo {
   public static createFromAxsios(response: AxiosResponse): ResponseVo {
     return new ResponseVo(response.data, response.status, response.headers);
   }
+
+  /**
+   * createError
+   * @param e
+   */
+  public static createError(e: Error): ResponseVo {
+    return new ResponseVo(e.message, 500, {});
+  }
 }

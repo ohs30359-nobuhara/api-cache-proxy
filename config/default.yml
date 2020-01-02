@@ -11,11 +11,11 @@ redis:
 
 resources:
 - prefix: sample
-  upstream: proxy host
-  expire: 20
+  upstream: proxy url
+  expireSec: 2
   timeoutMs: 3000
   circuitBreaker:
-    activeSpanMs: 30
+    activeSpanSec: 3
     threshold: 5
 
 log:

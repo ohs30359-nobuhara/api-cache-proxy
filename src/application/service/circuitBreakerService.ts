@@ -19,41 +19,43 @@ export class CircuitBreakerService {
 
     (get('resources') as any[] || []).forEach(conf => {
       this.config.set(conf.upstream, {
-        activeSpanMs: conf.circuitBreaker.activeSpanMs,
+        activeSpanMs: conf.circuitBreaker.activeSpanSec,
         threshold: conf.circuitBreaker.threshold
       });
     });
   }
 
   /**
-   * checkHost
-   * @param host
-   */
-  public async checkHost(host: string): Promise<boolean> {
-    const c: CircuitBreaker = await this.loadCircuitBreaker(host);
-    return c.execTriggerCheck();
-  }
-
-  /**
    * loadCircuitBreaker
    * @param host
    */
-  private async loadCircuitBreaker(host: string): Promise<CircuitBreaker> {
+  public async loadCircuitBreaker(host: string): Promise<CircuitBreaker> {
     const c: CircuitBreakerConfig | undefined = this.config.get(host);
 
     if (c === undefined) {
       throw Error;
     }
 
-    const val: string | null  = await this.storage.read(host);
+    const val: string | null  = await this.storage.read(this.createKey(host));
 
     if (val == null) {
-      const cb: CircuitBreaker = new CircuitBreaker(host, c.threshold);
-      this.storage.set(JSON.stringify(cb), c.activeSpanMs);
-      return new CircuitBreaker(host, c.threshold);
+      return new CircuitBreaker(host, c.threshold, c.activeSpanMs);
     }
 
-    return JSON.parse(val);
+    return CircuitBreaker.createFromJson(JSON.parse(val));
+  }
+
+  /**
+   * resist
+   * @param cb
+   */
+  public async resist(cb: CircuitBreaker): Promise<void> {
+    cb.countUp();
+    this.storage.set(this.createKey(cb.host), JSON.stringify(cb), cb.activeSpanMs);
+  }
+
+  private createKey(host: string): string {
+    return `CircuitBreaker:${host}`;
   }
 }
 
@@ -66,3 +68,4 @@ interface CircuitBreakerConfig {
   activeSpanMs: number
 }
 
+export const circuitBreakerService: CircuitBreakerService = new CircuitBreakerService();

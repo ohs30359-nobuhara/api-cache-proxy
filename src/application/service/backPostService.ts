@@ -12,9 +12,11 @@ export class BackPostService {
    * @param req
    */
   public async exec(req: RequestVo): Promise<ResponseVo> {
-    const response: ResponseVo = await httpRepository.fetch(req);
-
-    return response;
+    try {
+      return await httpRepository.fetch(req);
+    } catch (e) {
+      return ResponseVo.createError(e);
+    }
   }
 }
 

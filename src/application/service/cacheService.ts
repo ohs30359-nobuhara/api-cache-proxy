@@ -18,7 +18,7 @@ export class CacheService {
 
     (get('resources') as any[] || []).forEach(conf => {
       this.config.set(conf.upstream, {
-        expire: conf.expire
+        expire: conf.expireSec
       });
     });
   }
