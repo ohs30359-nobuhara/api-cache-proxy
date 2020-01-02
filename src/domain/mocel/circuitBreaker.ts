@@ -5,8 +5,6 @@
 export class CircuitBreaker {
   public readonly host: string;
   private readonly threshold: number;
-  private readonly activeSpanMs: number;
-  private timestamp: number;
   private count: number;
   private isForceMode: boolean
 
@@ -14,12 +12,9 @@ export class CircuitBreaker {
    * @constructor
    * @param host ターゲットホスト
    * @param threshold 閾値
-   * @param activeSpanMs 有効期限(ms)
    */
-  public constructor(host: string, threshold: number, activeSpanMs: number) {
+  public constructor(host: string, threshold: number) {
     this.host = host;
-    this.timestamp = Date.now();
-    this.activeSpanMs = activeSpanMs;
     this.threshold = threshold;
     this.count = 1;
     this.isForceMode = false;
@@ -35,11 +30,6 @@ export class CircuitBreaker {
       return true;
     }
 
-    // 有効時間外ならカウントとtimestampを初期化
-    if (!this.checkEffectiveSpan()) {
-      this.refresh();
-    }
-
     // カウントアップ後, 閾値判定
     return this.threshold < this.countUp();
   }
@@ -50,25 +40,6 @@ export class CircuitBreaker {
   private countUp(): number {
     this.count = this.count ++;
     return this.count;
-  }
-
-  /**
-   * refresh
-   * カウントとtimestampを初期化
-   */
-  private refresh(): void {
-    this.count = 0;
-    this.timestamp = Date.now();
-  }
-
-  /**
-   * checkEffectiveSpan
-   * 有効時間内判定
-   */
-  private checkEffectiveSpan() {
-    const diff: number = Date.now() - this.timestamp ;
-
-    return (diff < this.activeSpanMs);
   }
 
   /**

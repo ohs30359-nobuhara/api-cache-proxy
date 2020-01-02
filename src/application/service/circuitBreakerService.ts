@@ -1,19 +1,20 @@
 import { get } from 'config';
 import {CircuitBreaker} from "@domain/mocel/circuitBreaker";
+import {RedisRepository, redisRepository} from "@infrastructure/redisRepository";
 
 /**
  * CircuitBreakerService
  * @class
  */
 export class CircuitBreakerService {
-  private storage: Map<string, CircuitBreaker>;
+  private storage: RedisRepository;
   private config: Map<string, CircuitBreakerConfig>;
 
   /**
    * @constructor
    */
   public constructor() {
-    this.storage = new Map();
+    this.storage = redisRepository;
     this.config = new Map();
 
     (get('resources') as any[] || []).forEach(conf => {
@@ -28,8 +29,8 @@ export class CircuitBreakerService {
    * checkHost
    * @param host
    */
-  public checkHost(host: string): boolean {
-    const c: CircuitBreaker = this.loadCircuitBreaker(host);
+  public async checkHost(host: string): Promise<boolean> {
+    const c: CircuitBreaker = await this.loadCircuitBreaker(host);
     return c.execTriggerCheck();
   }
 
@@ -37,18 +38,22 @@ export class CircuitBreakerService {
    * loadCircuitBreaker
    * @param host
    */
-  private loadCircuitBreaker(host: string): CircuitBreaker {
+  private async loadCircuitBreaker(host: string): Promise<CircuitBreaker> {
     const c: CircuitBreakerConfig | undefined = this.config.get(host);
 
     if (c === undefined) {
       throw Error;
     }
 
-    if(this.storage.has(host)) {
-      return this.storage.get(host) as CircuitBreaker;
+    const val: string | null  = await this.storage.read(host);
+
+    if (val == null) {
+      const cb: CircuitBreaker = new CircuitBreaker(host, c.threshold);
+      this.storage.set(JSON.stringify(cb), c.activeSpanMs);
+      return new CircuitBreaker(host, c.threshold);
     }
 
-    return new CircuitBreaker(host, c.threshold, c.activeSpanMs);
+    return JSON.parse(val);
   }
 }
 

@@ -61,6 +61,8 @@ export class ProxyService {
     const responseVo: ResponseVo = await backPostService.exec(RequestVo.createFromFastify(req, this.proxyMap));
     cacheService.write(requestVo, responseVo);
 
+    console.log('error?');
+
     res.status(responseVo.status);
     res.headers(Object.entries(responseVo.header));
     res.send(responseVo.data);
