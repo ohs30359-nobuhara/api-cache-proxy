@@ -3,13 +3,17 @@
 product for providing proxy and offer to back post api
 
 ## configration
-```
+
+### resources
+
+```config/default.yml
 resources:
-- prefix: ${proxy prefix}
-  upstream: http://${back post api url}
-  expireSec: 2
-  timeoutMs: 3000
-  circuitBreaker:
-    activeSpanSec: 3
-    threshold: 5
+- prefix: interface provided by the application
+  upstream: back post api url
+  expireSec: cache lifetime (sec)
+  timeoutMs: timeout(ms)
+  circuitBreaker: 
+    activeSpanSec: circuit breaker valid time (sec)
+    threshold: circuit breaker enable threshold
 ```
+
