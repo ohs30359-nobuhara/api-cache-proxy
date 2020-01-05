@@ -2,12 +2,13 @@
 
 Ensuring system performance and SLAs is very important for developers.
 
-Common means of realization are cache, Circuit Breaker, etc.
+Generally, they are secured by introducing cache, circuit breakers, etc.
 
-But implementing them for all APIs is difficult.
+However, implementing them in existing APIs is difficult.
 
-This application provides cache and circuit breaker as proxy service for existing API.
+This application provides a cache and circuit breaker as a proxy service for existing APIs.
 
+![image](https://user-images.githubusercontent.com/16524047/71777942-8b0d9f80-2fea-11ea-97c5-361f8b39aa77.png)
 
 ## configration
 
@@ -23,4 +24,6 @@ resources:
     activeSpanSec: circuit breaker valid time (sec)
     threshold: circuit breaker enable threshold
 ```
+
+
 
