@@ -4,25 +4,27 @@
  */
 export class CircuitBreaker {
   public readonly host: string;
-  public readonly activeSpanMs: number;
+  public readonly activeSpanSec: number;
   private readonly threshold: number;
   private count: number;
   private isForceMode: boolean;
+  private timestamp: number;
 
   /**
    * @constructor
    * @param host ターゲットホスト
    * @param threshold 閾値
-   * @param activeSpanMs 有効期限(ms)
+   * @param activeSpanSec 有効期限(sec)
    * @param count
    * @param isForceMode 強制実行モード
    */
-  public constructor(host: string, threshold: number, activeSpanMs: number, count: number = 0, isForceMode: boolean = false) {
+  public constructor(host: string, threshold: number, activeSpanSec: number, count: number = 0, isForceMode: boolean = false) {
     this.host = host;
     this.threshold = threshold;
-    this.activeSpanMs = activeSpanMs;
+    this.activeSpanSec = activeSpanSec;
     this.count = count;
     this.isForceMode = isForceMode;
+    this.timestamp = Date.now();
   }
 
   /**
@@ -35,6 +37,14 @@ export class CircuitBreaker {
     }
 
     return this.threshold <= this.count;
+  }
+
+  /**
+   * isOverdue
+   */
+  public isOverdue(): boolean {
+    const diffMs: number = Date.now() - this.timestamp;
+    return this.activeSpanSec >= Math.floor(diffMs / 1000);
   }
 
   /**

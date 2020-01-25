@@ -51,7 +51,7 @@ export class CircuitBreakerService {
    */
   public async resist(cb: CircuitBreaker): Promise<void> {
     cb.countUp();
-    this.storage.set(this.createKey(cb.host), JSON.stringify(cb), cb.activeSpanMs);
+    this.storage.set(this.createKey(cb.host), JSON.stringify(cb), cb.activeSpanSec);
   }
 
   private createKey(host: string): string {
