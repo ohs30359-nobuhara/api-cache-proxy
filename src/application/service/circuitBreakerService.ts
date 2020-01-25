@@ -51,6 +51,7 @@ export class CircuitBreakerService {
    */
   public async resist(cb: CircuitBreaker): Promise<void> {
     cb.countUp();
+    // cacheが永続化しないように expireに activeSpanSecをセットする
     this.storage.set(this.createKey(cb.host), JSON.stringify(cb), cb.activeSpanSec);
   }
 

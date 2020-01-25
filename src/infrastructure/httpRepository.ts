@@ -7,8 +7,11 @@ import {RequestVo} from "@application/../domain/vo/requestVo";
  * @class
  */
 class HttpRepository {
-  private driver: HttpDriver
+  private driver: HttpDriver;
 
+  /**
+   * @constructor
+   */
   constructor() {
     this.driver = new HttpDriver();
   }
@@ -17,7 +20,11 @@ class HttpRepository {
    * @param request
    */
   public async fetch(request: RequestVo): Promise<ResponseVo> {
-    return await this.driver.get(request);
+    try {
+      return await this.driver.get(request);
+    } catch (e) {
+      return ResponseVo.createError(e);
+    }
   }
 }
 
