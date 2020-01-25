@@ -1,5 +1,5 @@
 import { get } from 'config';
-import {CircuitBreaker} from "@domain/mocel/circuitBreaker";
+import {CircuitBreaker} from "@domain/model/circuitBreaker";
 import {RedisRepository, redisRepository} from "@infrastructure/redisRepository";
 
 /**

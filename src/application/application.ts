@@ -5,7 +5,7 @@ import {Resource} from "@application/type/resource";
 import {ProxyService} from "@application/service/proxyService";
 import {logger} from "@application/logger";
 import {circuitBreakerService} from "@application/service/circuitBreakerService";
-import {CircuitBreaker} from "@domain/mocel/circuitBreaker";
+import {CircuitBreaker} from "@domain/model/circuitBreaker";
 import {RequestHandler} from "fastify";
 
 /**

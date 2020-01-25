@@ -8,7 +8,7 @@ export class CircuitBreaker {
   private readonly threshold: number;
   private count: number;
   private isForceMode: boolean;
-  private timestamp: number;
+  private readonly timestamp: number;
 
   /**
    * @constructor

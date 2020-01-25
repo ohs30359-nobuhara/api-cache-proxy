@@ -7,7 +7,7 @@ import {backPostService} from "@application/service/backPostService";
 import {cacheService} from "@application/service/cacheService";
 import {logger} from "@application/logger";
 import {circuitBreakerService} from "@application/service/circuitBreakerService";
-import {CircuitBreaker} from "@domain/mocel/circuitBreaker";
+import {CircuitBreaker} from "@domain/model/circuitBreaker";
 
 /**
  * ProxyService

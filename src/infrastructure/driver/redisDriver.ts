@@ -48,10 +48,10 @@ export class RedisDriver {
    * set
    * @param {string} key
    * @param {any} value
-   * @param {number} expire
+   * @param {number} expireSec
    */
-  public set(key: string, value: any, expire: number): void {
-    this.client.set(key, value, 'EX', expire).then(() => {
+  public set(key: string, value: any, expireSec: number): void {
+    this.client.set(key, value, 'EX', expireSec).then(() => {
     });
   }
 
