@@ -16,7 +16,6 @@ export class BackPostService {
    * @param circuitBreak
    */
   public async exec(requestVo: RequestVo, circuitBreak: boolean): Promise<ResponseVo> {
-
     const cache: ResponseVo | null = await cacheService.read(requestVo);
 
     // cache存在時は cacheを返す

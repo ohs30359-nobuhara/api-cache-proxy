@@ -4,6 +4,7 @@ import {RequestHandler} from "fastify";
 import {ResponseVo} from "@domain/vo/responseVo";
 import {RequestVo} from "@domain/vo/requestVo";
 import {backPostService} from "@application/service/backPostService";
+import {logger} from "@application/logger";
 
 /**
  * ProxyService
@@ -47,5 +48,6 @@ export class ProxyService {
     res.status(responseVo.status);
     res.headers(Object.entries(responseVo.header));
     res.send(responseVo.data);
+    logger.info({message: `[ proxy ] upstream: ${requestVo.getFullUrl()}, status: ${responseVo.status}`});
   }
 }

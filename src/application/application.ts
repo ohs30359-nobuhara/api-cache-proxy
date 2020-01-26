@@ -4,9 +4,6 @@ import { Server, IncomingMessage, ServerResponse } from 'http'
 import {Resource} from "@application/type/resource";
 import {ProxyService} from "@application/service/proxyService";
 import {logger} from "@application/logger";
-import {circuitBreakerService} from "@application/service/circuitBreakerService";
-import {CircuitBreaker} from "@domain/model/circuitBreaker";
-import {RequestHandler} from "fastify";
 
 /**
  * Application
@@ -25,22 +22,6 @@ export class Application {
   }
 
   /**
-   * circuitBreakerForceControl
-   * @param req
-   * @param res
-   */
-  private circuitBreakerForceControl: RequestHandler = async (req, res) => {
-    const query: { active: boolean, upstream: string } = req.query as any;
-    const cb: CircuitBreaker = await circuitBreakerService.loadCircuitBreaker(query.upstream);
-
-    query.active? cb.forceEffectiveness() : cb.forceInvalid();
-
-    circuitBreakerService.resist(cb);
-
-    res.send(true);
-  }
-
-  /**
    * run
    */
   public run() {
@@ -50,7 +31,5 @@ export class Application {
     this.server.listen(3000, () => {
       logger.info({message: 'server running'});
     });
-
-    this.server.post('/system/circuitBreaker/forceMode', this.circuitBreakerForceControl);
   }
 }

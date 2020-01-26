@@ -13,12 +13,13 @@ export class CircuitBreaker {
    * @param host ターゲットホスト
    * @param threshold 閾値
    * @param activeSpanSec 有効期限(sec)
+   * @param records エラーレコード
    */
-  public constructor(host: string, threshold: number, activeSpanSec: number) {
+  public constructor(host: string, threshold: number, activeSpanSec: number, records: Array<Record> = [{timestamp: Date.now()}]) {
     this.host = host;
     this.threshold = threshold;
     this.activeSpanSec = activeSpanSec;
-    this.records = [{timestamp: Date.now()}]
+    this.records = records;
   }
 
   /**
@@ -54,7 +55,7 @@ export class CircuitBreaker {
    * @param json
    */
   public static createFromJson(json: any): CircuitBreaker {
-    return new CircuitBreaker(json.host, json.threshold, json.activeSpanSec);
+    return new CircuitBreaker(json.host, json.threshold, json.activeSpanSec, json.records);
   }
 }
 
