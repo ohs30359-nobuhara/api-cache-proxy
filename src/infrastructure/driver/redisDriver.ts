@@ -1,4 +1,5 @@
 import * as IORedis from 'ioredis';
+import {logger} from "@application/logger";
 
 /**
  * RedisRepository
@@ -41,17 +42,34 @@ export class RedisDriver {
    * @param {string} key
    */
   public async get(key: string): Promise<string | null> {
-    return await this.client.get(key);
+    if (!this.alive()) {
+      logger.error({message: 'Cannot read because connection is not possible'});
+      return null;
+    }
+
+    try {
+      return await this.client.get(key);
+    } catch (e) {
+      logger.error({message: e.message});
+      return null;
+    }
   }
 
   /**
    * set
    * @param {string} key
    * @param {any} value
-   * @param {number} expire
+   * @param {number} expireSec
    */
-  public set(key: string, value: any, expire: number): void {
-    this.client.set(key, value, 'EX', expire).then(() => {
+  public set(key: string, value: any, expireSec: number): void {
+    if (!this.alive()) {
+      logger.error({message: 'Cannot write because connection is not possible'});
+      return;
+    }
+
+    this.client.set(key, value, 'EX', expireSec).then(() => {
+    }).catch((e) => {
+      logger.error({message: e.message});
     });
   }
 

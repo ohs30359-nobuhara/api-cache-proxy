@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
+import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from "axios";
 import {RequestVo} from "@domain/vo/requestVo";
 import {ResponseVo} from "@domain/vo/responseVo";
 
@@ -17,7 +17,7 @@ export class HttpDriver {
       return this.convertFromResponse(response);
 
     } catch (e) {
-      throw e;
+      return this.convertFromAxiosError(e);
     }
   }
 
@@ -51,5 +51,19 @@ export class HttpDriver {
    */
   private convertFromResponse(response: AxiosResponse): ResponseVo {
     return ResponseVo.createFromAxsios(response);
+  }
+
+  /**
+   * convertFromAxiosError
+   * @param error
+   */
+  private convertFromAxiosError(error: AxiosError): ResponseVo {
+    const response: AxiosResponse | undefined = error.response;
+
+    if (response === undefined) {
+      return ResponseVo.createError(error);
+    }
+
+    return ResponseVo.createError(error, response.status);
   }
 }

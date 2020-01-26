@@ -1,5 +1,5 @@
 import { get } from 'config';
-import {CircuitBreaker} from "@domain/mocel/circuitBreaker";
+import {CircuitBreaker} from "@domain/model/circuitBreaker";
 import {RedisRepository, redisRepository} from "@infrastructure/redisRepository";
 
 /**
@@ -51,7 +51,8 @@ export class CircuitBreakerService {
    */
   public async resist(cb: CircuitBreaker): Promise<void> {
     cb.countUp();
-    this.storage.set(this.createKey(cb.host), JSON.stringify(cb), cb.activeSpanMs);
+    // cacheが永続化しないように expireに activeSpanSecをセットする
+    this.storage.set(this.createKey(cb.host), JSON.stringify(cb), cb.activeSpanSec);
   }
 
   private createKey(host: string): string {

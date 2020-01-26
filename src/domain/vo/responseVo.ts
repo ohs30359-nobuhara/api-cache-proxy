@@ -32,8 +32,9 @@ export class ResponseVo {
   /**
    * createError
    * @param e
+   * @param status
    */
-  public static createError(e: Error): ResponseVo {
-    return new ResponseVo(e.message, 500, {});
+  public static createError(e: Error, status: number = 500): ResponseVo {
+    return new ResponseVo(e.message, status, {});
   }
 }
