@@ -4,6 +4,7 @@ import {ResponseVo} from "@domain/vo/responseVo";
 import {cacheService} from "@application/service/cacheService";
 import {CircuitBreaker} from "@domain/model/circuitBreaker";
 import {circuitBreakerService} from "@application/service/circuitBreakerService";
+import {cacheMetrics} from "@application/metrics/cacheMetrics";
 
 /**
  * BackPostService
@@ -20,8 +21,11 @@ export class BackPostService {
 
     // cache存在時は cacheを返す
     if (cache !== null) {
+      cacheMetrics.hit(requestVo.url);
       return cache;
     }
+
+    cacheMetrics.nonHit(requestVo.url);
 
     const responseVo: ResponseVo = (circuitBreak)?
       await this.requestUseCircuitBreak(requestVo) : await httpRepository.fetch(requestVo);

@@ -39,6 +39,7 @@ export class CircuitBreaker {
   }
 
   /**
+   * update
    * 有効期限が切れたレコードを削除
    */
   private update(): void {
