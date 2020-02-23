@@ -48,7 +48,7 @@ export class RedisDriver {
     }
 
     try {
-      return await Promise.race([this.client.get(key), timeout(1)]);
+      return await Promise.race([this.client.get(key), timeout(1000)]);
     } catch (e) {
       logger.error({message: e.message});
       return null;
