@@ -48,7 +48,7 @@ export class RedisDriver {
     }
 
     try {
-      return await this.client.get(key);
+      return await Promise.race([this.client.get(key), timeout(1)]);
     } catch (e) {
       logger.error({message: e.message});
       return null;
@@ -92,6 +92,16 @@ export class RedisDriver {
   public static singleMode(singleConfig: SingleConnectionConfig): RedisDriver {
     return new RedisDriver(new IORedis(singleConfig));
   }
+}
+
+/**
+ * timeout
+ * @param {number} ms
+ */
+async function timeout(ms: number): Promise<any> {
+  return new Promise((_, reject) => {
+    setTimeout(() => {reject(Error("Redis Command Timeout"))}, ms)
+  });
 }
 
 
